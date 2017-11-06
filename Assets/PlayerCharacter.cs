@@ -16,7 +16,7 @@ public class PlayerCharacter : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		
+		CameraFollow.instance.SetPointOfInterest(this.gameObject);
 	}
 	
 	// Update is called once per frame
