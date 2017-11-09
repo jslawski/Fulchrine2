@@ -28,8 +28,13 @@ public class PlayerCharacter : MonoBehaviour {
 	}
 
 	void Move(Vector2 moveVector)
+	{
+		this.Move(new Vector3(moveVector.x, 0, moveVector.y));
+	}
+
+	void Move(Vector3 moveVector)
 	{	
-		Vector3 moveDirection = new Vector3(moveVector.x, 0, moveVector.y);
-		this.gameObject.transform.Translate(moveDirection * Time.deltaTime * this.moveSpeed);
+		this.gameObject.transform.forward = moveVector;
+		this.gameObject.transform.Translate(moveVector * Time.deltaTime * this.moveSpeed, Space.World);
 	}
 }
