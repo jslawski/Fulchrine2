@@ -6,7 +6,7 @@ public class Warrior : PlayerCharacter {
 
 	protected override void Awake()
 	{
-		this.moveSpeed = 5f;
+		this.moveSpeed = 4f;
 		base.Awake();
 	}
 }

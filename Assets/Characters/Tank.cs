@@ -6,7 +6,7 @@ public class Tank : PlayerCharacter {
 
 	protected override void Awake()
 	{
-		this.moveSpeed = 3f;
+		this.moveSpeed = 2f;
 		base.Awake();
 	}
 }

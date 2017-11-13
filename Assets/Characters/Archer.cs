@@ -6,7 +6,7 @@ public class Archer : PlayerCharacter {
 
 	protected override void Awake()
 	{
-		this.moveSpeed = 6f;
+		this.moveSpeed = 5f;
 		base.Awake();
 	}
 }

@@ -6,7 +6,7 @@ public class Mage : PlayerCharacter {
 
 	protected override void Awake()
 	{
-		this.moveSpeed = 7f;
+		this.moveSpeed = 9f;
 		base.Awake();
 	}
 }
