@@ -7,7 +7,7 @@ using PolarCoordinates;
 
 public abstract class PlayerCharacter : MonoBehaviour {
 
-	private InputDevice device;
+	protected InputDevice device;
 
 	protected float moveSpeed;
 
@@ -26,8 +26,6 @@ public abstract class PlayerCharacter : MonoBehaviour {
 		this.selectionTextObjects[1] = GameObject.Find("Warrior");
 		this.selectionTextObjects[2] = GameObject.Find("Archer");
 		this.selectionTextObjects[3] = GameObject.Find("Mage");
-
-
 	}
 
 	// Use this for initialization
@@ -36,16 +34,17 @@ public abstract class PlayerCharacter : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	private void Update() {
+	protected void Update() {
 		if (this.device.LeftStick.Vector.magnitude > 0)
 		{
 			this.Move(this.device.LeftStick.Vector);
 		}
+
 		this.DPadCharacterSelection();
 		this.AnalogCharacterSelection();
 	}
 
-	private void Move(Vector2 moveVector)
+	protected void Move(Vector2 moveVector)
 	{
 		this.Move(new Vector3(moveVector.x, 0, moveVector.y));
 	}
@@ -56,7 +55,17 @@ public abstract class PlayerCharacter : MonoBehaviour {
 		this.gameObject.transform.Translate(moveVector * Time.deltaTime * this.moveSpeed, Space.World);
 	}
 
-	private void DPadCharacterSelection()
+	protected void Rotate(Vector2 forwardVector)
+	{
+		this.Rotate(new Vector3(forwardVector.x, 0, forwardVector.y));
+	}
+
+	private void Rotate(Vector3 forwardVector)
+	{
+		this.gameObject.transform.forward = forwardVector;
+	}
+
+	protected void DPadCharacterSelection()
 	{
 		if (this.device.DPad.X == 0)
 		{
@@ -82,7 +91,7 @@ public abstract class PlayerCharacter : MonoBehaviour {
 		}
 	}
 
-	private void AnalogCharacterSelection()
+	protected void AnalogCharacterSelection()
 	{
 		if (this.device.RightStick.Vector.magnitude > this.selectionThreshold && this.characterSelectorCoroutine == null)
 		{

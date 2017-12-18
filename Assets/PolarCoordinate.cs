@@ -2,6 +2,9 @@
 using System.Collections;
 
 namespace PolarCoordinates {
+
+	public enum Orientation {XY, XZ};
+
 	public class PolarCoordinate {
 		public float radius;
 		public float angle;  //In Radians
@@ -21,9 +24,17 @@ namespace PolarCoordinates {
 			angle = this.ConvertAngleTo360(Mathf.Atan2(cartesianPoint.y, cartesianPoint.x));
 		}
 
-		public PolarCoordinate(Vector3 cartesianPoint) {
+		public PolarCoordinate(Vector3 cartesianPoint, Orientation orientation = Orientation.XY) {
 			radius = 1;
-			angle = this.ConvertAngleTo360(Mathf.Atan2(cartesianPoint.y, cartesianPoint.x));
+
+			if (orientation == Orientation.XY)
+			{
+				angle = this.ConvertAngleTo360(Mathf.Atan2(cartesianPoint.y, cartesianPoint.x));
+			}
+			else
+			{
+				angle = this.ConvertAngleTo360(Mathf.Atan2(cartesianPoint.z, cartesianPoint.x));
+			}
 		}
 
 		public PolarCoordinate(Vector2 cartesianPoint) {
@@ -38,6 +49,11 @@ namespace PolarCoordinates {
 
 		public Vector3 PolarToCartesian() {
 			return new Vector3(radius * Mathf.Cos(angle), radius * Mathf.Sin(angle), 0);
+		}
+
+		public Vector3 PolarToCartesianTopDown()
+		{
+			return new Vector3(radius * Mathf.Cos(angle), 0, radius * Mathf.Sin(angle));
 		}
 
 		public static PolarCoordinate CartesianToPolar(Vector3 cart) {
