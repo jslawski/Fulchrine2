@@ -49,4 +49,9 @@ public abstract class MeleeAttacker : PlayerCharacter {
 		this.attackField.gameObject.SetActive(false);
 		this.attackingCoroutine = null;
 	}
+
+	protected void OnDestroy()
+	{	
+		this.attackField.gameObject.SetActive(false);
+	}
 }

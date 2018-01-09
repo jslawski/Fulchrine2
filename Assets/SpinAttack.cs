@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using InControl;
-using PolarCoordinates;
 
-public class CharacterSelection : MonoBehaviour {
+public class SpinAttack : Weapon {
+
+	private float spinAttackHitRate = 0.3f;
 
 	// Use this for initialization
 	void Start () {

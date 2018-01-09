@@ -16,8 +16,75 @@ public abstract class PlayerCharacter : MonoBehaviour {
 	private Coroutine characterSelectorCoroutine;
 	private float selectionThreshold = 0.1f;
 
+	private Text hpText;
+	private Text spText;
+
+	public float maxHP;
+	public float maxSP;
+	protected float _currentHP;
+	protected float _currentSP;
+	public float hpRegenRate;
+	public float spRegenRate;
+
+	public string characterName = string.Empty;
+
+	public float currentHP 
+	{
+		get 
+		{ 
+			return this._currentHP; 
+		}
+		set 
+		{ 
+			string hpString = "<color=green>";
+			this._currentHP = value;
+			StaticPlayerInfo.instance.SetCharacterHP(this.characterName, this._currentHP);
+
+			if (this._currentHP < (maxHP / 2))
+			{
+				hpString = "<color=orange>";
+			}
+
+			hpString += "HP: " + this._currentHP + "</color>";
+			this.hpText.text = hpString;
+
+			if (this._currentHP <= 0)
+			{
+				this._currentHP = 0;
+				StaticPlayerInfo.instance.SetDeadState(this.characterName, true);
+				this.ForceSwapCharacter();
+			}
+		}
+	}
+
+	public float currentSP 
+	{
+		get 
+		{ 
+			return _currentSP; 
+		}
+		set 
+		{ 
+			string spString = "<color=blue>";
+			this._currentSP = value;
+			StaticPlayerInfo.instance.SetCharacterSP(this.characterName, this._currentSP);
+
+			if (this._currentSP < (maxSP / 2))
+			{
+				spString = "<color=black>";
+			}
+
+			spString += "SP: " + this._currentSP + "</color>";
+			this.spText.text = spString; 
+		}
+	}
+
 	protected virtual void Awake()
 	{
+		Text[] texts = this.gameObject.GetComponentsInChildren<Text>();
+		this.hpText = texts[0];
+		this.spText = texts[1];
+
 		this.selectionTextObjects = new GameObject[4];
 
 		this.device = InputManager.Devices[0];
@@ -31,8 +98,31 @@ public abstract class PlayerCharacter : MonoBehaviour {
 	// Use this for initialization
 	private void Start() {
 		CameraFollow.instance.SetPointOfInterest(this.gameObject);
+
+		if (StaticPlayerInfo.instance.CharacterInfoExists(this.characterName) == false)
+		{
+			StaticPlayerInfo.instance.SetInitialInfo(this);
+		}
+
+		this.currentHP = StaticPlayerInfo.instance.GetCharacterHP(this.characterName);
+		this.currentSP = StaticPlayerInfo.instance.GetCharacterSP(this.characterName);
+
+		StaticPlayerInfo.OnHPRegen += this.OnHPRegen;
+		StaticPlayerInfo.OnSPRegen += this.OnSPRegen;
 	}
-	
+
+	private void OnDestroy()
+	{
+		StaticPlayerInfo.OnHPRegen -= this.OnHPRegen;
+		StaticPlayerInfo.OnSPRegen -= this.OnSPRegen;
+	}
+
+	protected void SetInitialValues()
+	{
+		StaticPlayerInfo.instance.SetCharacterHP(this.characterName, this.maxHP);
+		StaticPlayerInfo.instance.SetCharacterSP(this.characterName, this.maxSP);
+	}
+
 	// Update is called once per frame
 	protected void Update() {
 		if (this.device.LeftStick.Vector.magnitude > 0)
@@ -163,13 +253,49 @@ public abstract class PlayerCharacter : MonoBehaviour {
 			{
 				selectionText.color = Color.black;
 			}
+
+			string parsedCharacterName = selectionText.text.Substring(3, selectionText.text.Length - 7);
+			if (StaticPlayerInfo.instance.CharacterInfoExists(parsedCharacterName) && StaticPlayerInfo.instance.GetDeadState(parsedCharacterName))
+			{
+				selectionText.color = Color.red;
+			}
 		}
 
 		return characterSelection;
 	}
 
+	//Either pick a character that hasn't been selected yet, or the next "alive" character
+	private void ForceSwapCharacter()
+	{
+		if (!StaticPlayerInfo.instance.CharacterInfoExists("Warrior") || !StaticPlayerInfo.instance.GetDeadState("Warrior"))
+		{
+			ChangeCharacter("Warrior");
+		}
+		else if (!StaticPlayerInfo.instance.CharacterInfoExists("Archer") || !StaticPlayerInfo.instance.GetDeadState("Archer"))
+		{
+			ChangeCharacter("Archer");
+		}
+		else if (!StaticPlayerInfo.instance.CharacterInfoExists("Mage") || !StaticPlayerInfo.instance.GetDeadState("Mage"))
+		{
+			ChangeCharacter("Mage");
+		}
+		else if (!StaticPlayerInfo.instance.CharacterInfoExists("Tank") || !StaticPlayerInfo.instance.GetDeadState("Tank"))
+		{
+			ChangeCharacter("Tank");
+		}
+		else
+		{
+			Debug.LogError("GAME OVER!");
+		}
+	}
+
 	private void ChangeCharacter(string characterType)
 	{
+		if (StaticPlayerInfo.instance.CharacterInfoExists(characterType) && StaticPlayerInfo.instance.GetDeadState(characterType))
+		{
+			return;
+		}
+
 		Material characterMaterial;
 
 		Destroy(this);
@@ -198,5 +324,15 @@ public abstract class PlayerCharacter : MonoBehaviour {
 		}
 
 		this.gameObject.GetComponent<Renderer>().material = characterMaterial;
+	}
+
+	private void OnHPRegen()
+	{
+		this.currentHP = StaticPlayerInfo.instance.GetCharacterHP(this.characterName);
+	}
+
+	private void OnSPRegen()
+	{
+		this.currentSP = StaticPlayerInfo.instance.GetCharacterSP(this.characterName);
 	}
 }

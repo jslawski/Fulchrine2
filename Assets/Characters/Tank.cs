@@ -5,6 +5,7 @@ using UnityEngine;
 public class Tank : MeleeAttacker {
 
 	public GameObject spinAttackObject;
+	private GameObject currentSpinAttack;
 
 	private float spinAttackWindUpTime = 0.75f;
 	private float spinAttackDuration = 3f;
@@ -12,12 +13,19 @@ public class Tank : MeleeAttacker {
 	private float normalMoveSpeed = 2f;
 	private float spinAttackMoveSpeed = 0.5f;
 
+	private float spinAttackCost = 20f;
+
 	protected override void Awake()
 	{
 		base.Awake();
 		this.moveSpeed = this.normalMoveSpeed;
 		this.attackWindUpTime = 0.5f;
 		this.attackSwingTime = 0.2f;
+		this.maxHP = 250f;
+		this.maxSP = 50f;
+		this.hpRegenRate = 0.7f;
+		this.spRegenRate = 0.7f;
+		this.characterName = "Tank";
 		this.attackField.weaponTransform.localScale = new Vector3(4f, 1f, 1f);
 		this.spinAttackObject = Resources.Load("SpinAttack") as GameObject;
 	}
@@ -34,9 +42,16 @@ public class Tank : MeleeAttacker {
 
 	private IEnumerator SpinAttack()
 	{
+		if (this.currentSP < this.spinAttackCost)
+		{
+			yield break;
+		}
+
+		this.currentSP -= this.spinAttackCost;
+
 		yield return new WaitForSeconds(this.spinAttackWindUpTime);
 
-		GameObject currentSpinAttack = GameObject.Instantiate(this.spinAttackObject, this.transform.position, new Quaternion()) as GameObject;
+		this.currentSpinAttack = GameObject.Instantiate(this.spinAttackObject, this.transform.position, new Quaternion()) as GameObject;
 		this.moveSpeed = spinAttackMoveSpeed;
 
 		for (float i = 0; i < this.spinAttackDuration; i += Time.deltaTime)
@@ -50,8 +65,14 @@ public class Tank : MeleeAttacker {
 			yield return null;
 		}
 
-		Destroy(currentSpinAttack);
+		Destroy(this.currentSpinAttack);
 		this.moveSpeed = this.normalMoveSpeed;
 		this.attackingCoroutine = null;
+	}
+
+	protected new void OnDestroy()
+	{
+		base.OnDestroy();
+		Destroy(this.currentSpinAttack);
 	}
 }

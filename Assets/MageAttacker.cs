@@ -13,6 +13,8 @@ public abstract class MageAttacker : PlayerCharacter {
 
 	private float strafeSpeed = 1.5f;
 
+	private float attackSPRate = 0.05f; 
+
 	protected override void Awake()
 	{
 		Weapon[] weaponList = this.gameObject.GetComponentsInChildren<Weapon>(true);
@@ -37,7 +39,7 @@ public abstract class MageAttacker : PlayerCharacter {
 		{
 			this.attackingCoroutine = StartCoroutine(this.Attack());
 		}
-
+			
 		this.DPadCharacterSelection();
 		this.AnalogCharacterSelection();
 	}
@@ -46,8 +48,17 @@ public abstract class MageAttacker : PlayerCharacter {
 	{
 		float currentCastTime = 0;
 
+		StartCoroutine(DrainSPAttack());
+
 		while (this.device.Action1.IsPressed)
 		{
+			if (this.currentSP <= 0)
+			{
+				this.attackField.gameObject.SetActive(false);
+				this.attackingCoroutine = null;
+				yield break;
+			}
+
 			if (this.device.LeftStick.Vector.magnitude > 0)
 			{
 				this.Strafe(this.device.LeftStick.Vector);
@@ -78,5 +89,19 @@ public abstract class MageAttacker : PlayerCharacter {
 	protected void Strafe(Vector3 direction)
 	{
 		this.gameObject.transform.Translate(direction * Time.deltaTime * this.strafeSpeed, Space.World);
+	}
+
+	protected IEnumerator DrainSPAttack()
+	{
+		while (this.device.Action1.IsPressed)
+		{
+			if (this.currentSP <= 0)
+			{
+				yield break;
+			}
+
+			this.currentSP -= 1;
+			yield return new WaitForSeconds(this.attackSPRate);
+		}
 	}
 }

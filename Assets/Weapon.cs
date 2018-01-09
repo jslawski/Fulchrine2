@@ -11,4 +11,12 @@ public class Weapon : MonoBehaviour {
 	{
 		this.weaponTransform = this.gameObject.GetComponent<Transform>();
 	}
+
+	protected virtual void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.tag == "Enemy")
+		{
+			Debug.LogError("I got 'em!");
+		}
+	}
 }

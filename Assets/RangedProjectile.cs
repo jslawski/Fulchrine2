@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RangedProjectile : MonoBehaviour {
+public class RangedProjectile : Weapon {
 
 	protected float projectileSpeed;
 	public Vector3 projectileDirection;
@@ -20,5 +20,15 @@ public class RangedProjectile : MonoBehaviour {
 			this.transform.Translate(this.projectileDirection * Time.deltaTime * this.projectileSpeed);
 		}
 
+	}
+
+	private void OnTriggerEnter(Collider other)
+	{
+		base.OnTriggerEnter(other);
+
+		if (other.tag == "Enemy")
+		{
+			Destroy(this.gameObject);
+		}
 	}
 }
