@@ -12,11 +12,12 @@ public class Mage : MageAttacker {
 		base.Awake();
 		this.moveSpeed = 9f;
 		this.attackWindUpTime = 0.5f;
-		this.maxHP = 75f;
-		this.maxSP = 150f;
+		this.maxHP = 750f;
+		this.maxSP = 1500f;
 		this.hpRegenRate = 0.5f;
 		this.spRegenRate = 0.5f;
 		this.characterName = "Mage";
+		this.armor.damageBlocked = 10f;
 	}
 
 	protected new void Update()
@@ -57,7 +58,7 @@ public class Mage : MageAttacker {
 				yield break;
 			}
 
-			StaticPlayerInfo.instance.HealParty(1.0f);
+			StaticPlayerInfo.instance.HealParty(10.0f);
 			yield return new WaitForSeconds(this.healPartyHPRate);
 		}
 	}
@@ -71,7 +72,7 @@ public class Mage : MageAttacker {
 				yield break;
 			}
 
-			this.currentSP -= 1;
+			this.currentSP -= 10;
 			yield return new WaitForSeconds(this.healSPRate);
 		}
 	}

@@ -92,7 +92,7 @@ public class StaticPlayerInfo : MonoBehaviour {
 		{
 			if (character.Value[StaticPlayerInfo.CurrentHPKey] < character.Value[StaticPlayerInfo.MaxHPKey] && !Convert.ToBoolean(character.Value[StaticPlayerInfo.DeadKey]))
 			{
-				character.Value[StaticPlayerInfo.CurrentHPKey] += 1;
+				character.Value[StaticPlayerInfo.CurrentHPKey] += amount;
 				StaticPlayerInfo.OnHPRegen();
 			}
 		}
@@ -106,7 +106,7 @@ public class StaticPlayerInfo : MonoBehaviour {
 		{
 			if (characterStats[StaticPlayerInfo.CurrentHPKey] < characterStats[StaticPlayerInfo.MaxHPKey])
 			{
-				characterStats[StaticPlayerInfo.CurrentHPKey] += 1;
+				characterStats[StaticPlayerInfo.CurrentHPKey] += 10;
 				if (StaticPlayerInfo.OnHPRegen != null)
 				{
 					StaticPlayerInfo.OnHPRegen();
@@ -125,7 +125,7 @@ public class StaticPlayerInfo : MonoBehaviour {
 		{
 			if (characterStats[StaticPlayerInfo.CurrentSPKey] < characterStats[StaticPlayerInfo.MaxSPKey])
 			{
-				characterStats[StaticPlayerInfo.CurrentSPKey] += 1;
+				characterStats[StaticPlayerInfo.CurrentSPKey] += 10;
 				if (StaticPlayerInfo.OnSPRegen != null)
 				{
 					StaticPlayerInfo.OnSPRegen();

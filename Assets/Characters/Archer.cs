@@ -14,20 +14,22 @@ public class Archer : RangedAttacker {
 
 	private GameObject explosiveProjectile;
 
-	private float explosiveProjectileCost = 30f;
+	private float explosiveProjectileCost = 300f;
 
 	protected override void Awake()
 	{
 		base.Awake();
 		this.moveSpeed = 5f;
 
-		this.maxHP = 120f;
-		this.maxSP = 100f;
+		this.maxHP = 1200f;
+		this.maxSP = 1000f;
 		this.hpRegenRate = 0.6f;
 		this.spRegenRate = 0.7f;
 		this.characterName = "Archer";
 
 		this.explosiveProjectile = Resources.Load("ExplosiveProjectile") as GameObject;
+
+		this.armor.damageBlocked = 10f;
 	}
 
 	protected new void Update()

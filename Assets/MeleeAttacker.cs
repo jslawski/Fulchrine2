@@ -7,8 +7,9 @@ public abstract class MeleeAttacker : PlayerCharacter {
 	//Attack variables
 	[SerializeField]
 	protected Weapon attackField;
-	protected float attackWindUpTime;
-	protected float attackSwingTime;
+	protected float attackWindUpFrames;
+	protected float attackSwingFrames = 5f;
+	protected float attackCooldownFrames;
 	protected Coroutine attackingCoroutine;
 
 	protected override void Awake()
@@ -39,14 +40,28 @@ public abstract class MeleeAttacker : PlayerCharacter {
 		this.DPadCharacterSelection();
 		this.AnalogCharacterSelection();
 	}
-
+		
 	private IEnumerator Attack()
 	{
 		//Wind Up
-		yield return new WaitForSeconds(this.attackWindUpTime);
+		for (int i = 0; i < this.attackWindUpFrames; i++)
+		{
+			yield return null;
+		}
 		this.attackField.gameObject.SetActive(true);
-		yield return new WaitForSeconds(this.attackSwingTime);
+
+		for (int i = 0; i < this.attackSwingFrames; i++)
+		{
+			yield return null;
+		}
+
 		this.attackField.gameObject.SetActive(false);
+
+		for (int i = 0; i < this.attackCooldownFrames; i++)
+		{
+			yield return null;
+		}
+
 		this.attackingCoroutine = null;
 	}
 

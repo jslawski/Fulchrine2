@@ -100,7 +100,7 @@ public abstract class MageAttacker : PlayerCharacter {
 				yield break;
 			}
 
-			this.currentSP -= 1;
+			this.currentSP -= 10;
 			yield return new WaitForSeconds(this.attackSPRate);
 		}
 	}

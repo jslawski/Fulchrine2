@@ -8,20 +8,22 @@ public class Warrior : MeleeAttacker {
 	private float diveTime = 0.25f;
 	private float diveCooldown = 0.2f;
 
-	private float diveAttackCost = 20f;
+	private float diveAttackCost = 200f;
 
 	protected override void Awake()
 	{
 		base.Awake();
 		this.moveSpeed = 4f;
-		this.attackWindUpTime = 0.2f;
-		this.attackSwingTime = 0.3f;
-		this.maxHP = 150f;
-		this.maxSP = 50f;
+		this.attackWindUpFrames = 10f;
+		this.attackCooldownFrames = 10f;	
+		this.maxHP = 1500f;
+		this.maxSP = 500f;
 		this.hpRegenRate = 0.6f;
 		this.spRegenRate = 0.7f;
 		this.characterName = "Warrior";
 		this.attackField.weaponTransform.localScale = new Vector3(1.5f, 1f, 1f);
+		this.attackField.damageOutput = 100f;
+		this.armor.damageBlocked = 30f;
 	}
 
 	protected new void Update()

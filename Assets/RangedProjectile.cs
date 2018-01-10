@@ -10,6 +10,7 @@ public class RangedProjectile : Weapon {
 	protected void Awake()
 	{
 		this.projectileSpeed = 15f;
+		this.damageOutput = 70f;
 	}
 
 	// Update is called once per frame
@@ -22,9 +23,9 @@ public class RangedProjectile : Weapon {
 
 	}
 
-	private void OnTriggerEnter(Collider other)
+	private void OnTriggerStay(Collider other)
 	{
-		base.OnTriggerEnter(other);
+		base.OnTriggerStay(other);
 
 		if (other.tag == "Enemy")
 		{

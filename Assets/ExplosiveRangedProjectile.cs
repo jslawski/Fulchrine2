@@ -12,9 +12,9 @@ public class ExplosiveRangedProjectile : RangedProjectile {
 		this.projectileSpeed = 30f;
 	}
 
-	protected override void OnTriggerEnter(Collider other)
+	protected override void OnTriggerStay(Collider other)
 	{
-		base.OnTriggerEnter(other);
+		base.OnTriggerStay(other);
 		if (other.tag == "Enemy")
 		{
 			this.GenerateExplosion();

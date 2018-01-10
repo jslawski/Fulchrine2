@@ -13,21 +13,23 @@ public class Tank : MeleeAttacker {
 	private float normalMoveSpeed = 2f;
 	private float spinAttackMoveSpeed = 0.5f;
 
-	private float spinAttackCost = 20f;
+	private float spinAttackCost = 200f;
 
 	protected override void Awake()
 	{
 		base.Awake();
 		this.moveSpeed = this.normalMoveSpeed;
-		this.attackWindUpTime = 0.5f;
-		this.attackSwingTime = 0.2f;
-		this.maxHP = 250f;
-		this.maxSP = 50f;
+		this.attackWindUpFrames = 25f;
+		this.attackCooldownFrames = 10f;
+		this.maxHP = 2500f;
+		this.maxSP = 500f;
 		this.hpRegenRate = 0.7f;
 		this.spRegenRate = 0.7f;
 		this.characterName = "Tank";
 		this.attackField.weaponTransform.localScale = new Vector3(4f, 1f, 1f);
+		this.attackField.damageOutput = 250f;
 		this.spinAttackObject = Resources.Load("SpinAttack") as GameObject;
+		this.armor.damageBlocked = 50f;
 	}
 
 	protected new void Update()

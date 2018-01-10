@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using InControl;
 using PolarCoordinates;
 
-public abstract class PlayerCharacter : MonoBehaviour {
+public abstract class PlayerCharacter : DamagableCharacter {
 
 	protected InputDevice device;
 
@@ -93,6 +93,8 @@ public abstract class PlayerCharacter : MonoBehaviour {
 		this.selectionTextObjects[1] = GameObject.Find("Warrior");
 		this.selectionTextObjects[2] = GameObject.Find("Archer");
 		this.selectionTextObjects[3] = GameObject.Find("Mage");
+
+		this.armor = this.gameObject.GetComponent<Armor>();
 	}
 
 	// Use this for initialization
