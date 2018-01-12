@@ -5,7 +5,7 @@ using UnityEngine;
 public class Warrior : MeleeAttacker {
 
 	private float diveSpeed = 50f;
-	private float diveTime = 0.25f;
+	private float diveTime = 0.15f;
 	private float diveCooldown = 0.2f;
 
 	private float diveAttackCost = 200f;
@@ -23,7 +23,11 @@ public class Warrior : MeleeAttacker {
 		this.characterName = "Warrior";
 		this.attackField.weaponTransform.localScale = new Vector3(1.5f, 1f, 1f);
 		this.attackField.damageOutput = 100f;
+		this.attackEnchantment = Enchantment.Ice;
+		this.defenseEnchantment = Enchantment.Ice;
+		this.attackField.enchantment = this.attackEnchantment;
 		this.armor.damageBlocked = 30f;
+
 	}
 
 	protected new void Update()

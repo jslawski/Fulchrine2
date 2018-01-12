@@ -2,11 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamagableCharacter : MonoBehaviour {
+public abstract class DamagableCharacter : MonoBehaviour {
 
 	protected Armor armor;
+	public Enchantment defenseEnchantment;
 
-	public float CalculateDamage(float attackDamage)
+	private bool invulnerable = false;
+
+	public abstract float currentHP { get; set; }
+
+	protected int invulnerabilityFrames = 0;
+
+	protected Material defaultMaterial;
+
+	public float CalculateDamage(float attackDamage, Enchantment enchantment)
 	{
 		float finalDamageBlocked = armor.damageBlocked;
 		float finalDamageInflicted = attackDamage;
@@ -19,18 +28,52 @@ public class DamagableCharacter : MonoBehaviour {
 			finalDamageBlocked += buff.defenseBuff;
 		}
 
-		Debug.LogError("Base Armor Class: " + armor.damageBlocked + " Armor Class after Defense Debuff: " + finalDamageBlocked + " Damage done: " + (finalDamageInflicted - finalDamageBlocked));
+		finalDamageInflicted = EnchantmentManager.ApplyEnchantmentModifier(finalDamageInflicted, enchantment, this.defenseEnchantment);
+
+		Debug.LogError("Base Attack: " + attackDamage + " After Enchantment Attack: " + finalDamageInflicted + "Damage Blocked: " + finalDamageBlocked + " Damaged Inflicted: " + (finalDamageInflicted - finalDamageBlocked));
+
+		//Debug.LogError("Base Armor Class: " + armor.damageBlocked + " Armor Class after Defense Debuff: " + finalDamageBlocked + " Damage done: " + (finalDamageInflicted - finalDamageBlocked));
 
 		return finalDamageInflicted - finalDamageBlocked;
 	}
 
-	// Use this for initialization
-	void Start () {
-		
+	public void TakeDamage(float attackDamage, Enchantment attackEnchantment)
+	{
+		if (this.invulnerable == true || attackDamage <= 0)
+		{
+			return;
+		}
+
+		float calculatedDamageDone = this.CalculateDamage(attackDamage, attackEnchantment);
+		if (calculatedDamageDone > 0)
+		{
+			this.currentHP -= calculatedDamageDone;
+			StartCoroutine(this.TriggerInvulnerabilityFrames());
+		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	private IEnumerator TriggerInvulnerabilityFrames()
+	{
+		MeshRenderer renderer = this.gameObject.GetComponent<MeshRenderer>();
+
+		this.invulnerable = true;
+		for (int i = 0; i < this.invulnerabilityFrames; i++)
+		{
+
+			if (renderer.material.name == "Damaged (Instance)")
+			{
+				renderer.material = this.defaultMaterial;
+			}
+			else
+			{
+				renderer.material = Resources.Load<Material>("Materials/Damaged");
+			}
+
+			yield return null;
+		}
+
+		renderer.material = this.defaultMaterial;
+
+		this.invulnerable = false;
 	}
 }

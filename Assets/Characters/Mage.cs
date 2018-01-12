@@ -18,6 +18,8 @@ public class Mage : MageAttacker {
 		this.spRegenRate = 0.5f;
 		this.characterName = "Mage";
 		this.armor.damageBlocked = 10f;
+		this.attackEnchantment = Enchantment.None;
+		this.defenseEnchantment = Enchantment.Fire;
 	}
 
 	protected new void Update()

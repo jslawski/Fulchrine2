@@ -17,6 +17,8 @@ public class StaticPlayerInfo : MonoBehaviour {
 	const string HPRegenRateKey = "HPRegenRate";
 	const string SPRegenRateKey = "SPRegenRate";
 	const string DeadKey = "IsDead";
+	const string AttackEnchantmentKey = "AttackEnchantment";
+	const string DefenseEnchantmentKey = "DefenseEnchantment";
 
 	public delegate void HPRegen();
 	public static event HPRegen OnHPRegen;
@@ -49,6 +51,9 @@ public class StaticPlayerInfo : MonoBehaviour {
 		newDictionary.Add(StaticPlayerInfo.HPRegenRateKey, character.hpRegenRate);
 		newDictionary.Add(StaticPlayerInfo.SPRegenRateKey, character.spRegenRate);
 		newDictionary.Add(StaticPlayerInfo.DeadKey, 0);
+
+		newDictionary.Add(StaticPlayerInfo.AttackEnchantmentKey, (float)character.attackEnchantment);
+		newDictionary.Add(StaticPlayerInfo.DefenseEnchantmentKey, (float)character.defenseEnchantment);
 
 		this.characterInfo.Add(character.characterName, newDictionary);
 
@@ -84,6 +89,26 @@ public class StaticPlayerInfo : MonoBehaviour {
 	public bool GetDeadState(string character)
 	{
 		return Convert.ToBoolean(this.characterInfo[character][StaticPlayerInfo.DeadKey]);
+	}
+		
+	public void SetCharacterAttackEnchantment(string character, Enchantment enchantment)
+	{
+		this.characterInfo[character][StaticPlayerInfo.AttackEnchantmentKey] = (float)enchantment;
+	}
+
+	public Enchantment GetCharacterAttackEnchantment(string character)
+	{
+		return (Enchantment)this.characterInfo[character][StaticPlayerInfo.AttackEnchantmentKey];
+	}
+
+	public void SetCharacterDefenseEnchantment(string character, Enchantment enchantment)
+	{
+		this.characterInfo[character][StaticPlayerInfo.DefenseEnchantmentKey] = (float)enchantment;
+	}
+
+	public Enchantment GetCharacterDefenseEnchantment(string character)
+	{
+		return (Enchantment)this.characterInfo[character][StaticPlayerInfo.DefenseEnchantmentKey];
 	}
 
 	public void HealParty(float amount)

@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class Enemy : DamagableCharacter {
 
-	private bool invulnerable = false;
-	private int invulnerabilityFrames = 10;
+	private float moveSpeed = 3f;
 
 	public bool defenseDebuffed = false;
 
 	private float maxHP = 1000f;
 	private float _currentHP;
-	public float currentHP
+	public override float currentHP
 	{
 		get { return this._currentHP; }
 		set 
@@ -30,45 +29,33 @@ public class Enemy : DamagableCharacter {
 		this.armor = this.gameObject.GetComponent<Armor>();
 		this.armor.damageBlocked = 30f;
 		this.currentHP = this.maxHP;
+		this.invulnerabilityFrames = 10;
+		this.defaultMaterial = this.gameObject.GetComponent<Renderer>().material;
 	}
 
-	public void TakeDamage(float attackDamage)
+	protected void Move(Vector2 moveVector)
 	{
-		if (this.invulnerable == true || attackDamage <= 0)
-		{
-			return;
-		}
-
-		float calculatedDamageDone = this.CalculateDamage(attackDamage);
-		if (calculatedDamageDone > 0)
-		{
-			this.currentHP -= calculatedDamageDone;
-			StartCoroutine(this.TriggerInvulnerabilityFrames());
-		}
+		this.Move(new Vector3(moveVector.x, 0, moveVector.y));
 	}
 
-	private IEnumerator TriggerInvulnerabilityFrames()
+	private void Move(Vector3 moveVector)
+	{	
+		this.gameObject.transform.forward = moveVector.normalized;
+		this.gameObject.transform.Translate(moveVector.normalized * Time.deltaTime * this.moveSpeed, Space.World);
+	}
+
+	protected void Rotate(Vector2 forwardVector)
 	{
-		MeshRenderer enemyRenderer = this.gameObject.GetComponent<MeshRenderer>();
+		this.Rotate(new Vector3(forwardVector.x, 0, forwardVector.y));
+	}
 
-		this.invulnerable = true;
-		for (int i = 0; i < this.invulnerabilityFrames; i++)
-		{
+	private void Rotate(Vector3 forwardVector)
+	{
+		this.gameObject.transform.forward = forwardVector;
+	}
 
-				if (enemyRenderer.material.name == "Damaged (Instance)")
-				{
-					enemyRenderer.material = Resources.Load<Material>("Materials/Enemy");
-				}
-				else
-				{
-					enemyRenderer.material = Resources.Load<Material>("Materials/Damaged");
-				}
-
-			yield return null;
-		}
-
-		enemyRenderer.material = Resources.Load<Material>("Materials/Enemy");
-
-		this.invulnerable = false;
+	protected float GetDistanceFromPlayer(Vector3 playerPosition, Vector3 enemyPosition)
+	{
+		return Mathf.Sqrt(Mathf.Pow((playerPosition.x - enemyPosition.x), 2) + Mathf.Pow((playerPosition.z - enemyPosition.z), 2));
 	}
 }

@@ -28,7 +28,12 @@ public abstract class PlayerCharacter : DamagableCharacter {
 
 	public string characterName = string.Empty;
 
-	public float currentHP 
+	public Enchantment attackEnchantment;
+
+	private Image swordIcon;
+	private Image shieldIcon;
+
+	public override float currentHP 
 	{
 		get 
 		{ 
@@ -95,6 +100,10 @@ public abstract class PlayerCharacter : DamagableCharacter {
 		this.selectionTextObjects[3] = GameObject.Find("Mage");
 
 		this.armor = this.gameObject.GetComponent<Armor>();
+		Image[] icons = this.GetComponentsInChildren<Image>();
+		this.swordIcon = icons[0];
+		this.shieldIcon = icons[1];
+		this.invulnerabilityFrames = 10;
 	}
 
 	// Use this for initialization
@@ -111,6 +120,10 @@ public abstract class PlayerCharacter : DamagableCharacter {
 
 		StaticPlayerInfo.OnHPRegen += this.OnHPRegen;
 		StaticPlayerInfo.OnSPRegen += this.OnSPRegen;
+
+		EnchantmentManager.SetIconColors(this.swordIcon, this.attackEnchantment, this.shieldIcon, this.defenseEnchantment);
+
+		this.defaultMaterial = this.gameObject.GetComponent<Renderer>().material;
 	}
 
 	private void OnDestroy()

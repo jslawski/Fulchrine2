@@ -30,6 +30,9 @@ public class Archer : RangedAttacker {
 		this.explosiveProjectile = Resources.Load("ExplosiveProjectile") as GameObject;
 
 		this.armor.damageBlocked = 10f;
+
+		this.attackEnchantment = Enchantment.Fire;
+		this.defenseEnchantment = Enchantment.Fire;
 	}
 
 	protected new void Update()
@@ -91,6 +94,7 @@ public class Archer : RangedAttacker {
 			newRangedProjectileObject = GameObject.Instantiate(this.rangedProjectile, this.transform.position, new Quaternion()) as GameObject;
 			RangedProjectile newRangedProjectile = newRangedProjectileObject.GetComponent<RangedProjectile>();
 			newRangedProjectile.projectileDirection = launchDirection;
+			newRangedProjectile.enchantment = this.attackEnchantment;
 		}
 	}
 }

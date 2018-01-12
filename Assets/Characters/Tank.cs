@@ -28,6 +28,9 @@ public class Tank : MeleeAttacker {
 		this.characterName = "Tank";
 		this.attackField.weaponTransform.localScale = new Vector3(4f, 1f, 1f);
 		this.attackField.damageOutput = 250f;
+		this.attackEnchantment = Enchantment.Fire;
+		this.defenseEnchantment = Enchantment.Ice;
+		this.attackField.enchantment = this.attackEnchantment;
 		this.spinAttackObject = Resources.Load("SpinAttack") as GameObject;
 		this.armor.damageBlocked = 50f;
 	}

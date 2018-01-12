@@ -9,6 +9,8 @@ public class Weapon : MonoBehaviour {
 	//Add attack stats and such here
 	public Transform weaponTransform;
 
+	public Enchantment enchantment;
+
 	private void Awake()
 	{
 		this.weaponTransform = this.gameObject.GetComponent<Transform>();
@@ -16,9 +18,11 @@ public class Weapon : MonoBehaviour {
 
 	protected virtual void OnTriggerStay(Collider other)
 	{
-		if (other.gameObject.tag == "Enemy")
+		Debug.LogError("In on trigger stay");
+		if (other.tag == "Enemy" || other.tag == "Player")
 		{
-			other.gameObject.GetComponent<Enemy>().TakeDamage(damageOutput);
+			Debug.LogError("Collided");
+			other.gameObject.GetComponent<DamagableCharacter>().TakeDamage(damageOutput, enchantment);
 		}
 	}
 }
