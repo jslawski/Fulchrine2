@@ -18,10 +18,8 @@ public class Weapon : MonoBehaviour {
 
 	protected virtual void OnTriggerStay(Collider other)
 	{
-		Debug.LogError("In on trigger stay");
 		if (other.tag == "Enemy" || other.tag == "Player")
 		{
-			Debug.LogError("Collided");
 			other.gameObject.GetComponent<DamagableCharacter>().TakeDamage(damageOutput, enchantment);
 		}
 	}

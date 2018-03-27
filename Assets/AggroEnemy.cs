@@ -8,10 +8,6 @@ public class AggroEnemy : Enemy {
 
 	[SerializeField]
 	private Weapon attackField;
-	private Image swordIcon;
-	private Image shieldIcon;
-
-	private GameObject playerTarget;
 
 	private float attackDistance = 0.8f;
 
@@ -20,27 +16,13 @@ public class AggroEnemy : Enemy {
 	private int attackWindUpFrames = 5;
 	private int attackCooldownFrames = 50;
 
-	bool attacking = false;
-
 	// Use this for initialization
 	void Start () {
-
-		this.playerTarget = GameObject.Find("Character");
-
 		attackField.damageOutput = Random.Range(100, 200);
-		attackField.enchantment = (Enchantment)Random.Range((int)Enchantment.Fire, (int)(Enchantment.None + 1));
-		this.defenseEnchantment = (Enchantment)Random.Range((int)Enchantment.Fire, (int)(Enchantment.None + 1));
-
-		Image[] icons = this.GetComponentsInChildren<Image>();
-		this.swordIcon = icons[0];
-		this.shieldIcon = icons[1];
-
-		EnchantmentManager.SetIconColors(this.swordIcon, attackField.enchantment, this.shieldIcon, this.defenseEnchantment);
+		attackField.enchantment = this.attackEnchantment;
 
 		StartCoroutine(AdjustDirection());
 	}
-
-
 
 	// Update is called once per frame
 	void Update () {
@@ -52,7 +34,6 @@ public class AggroEnemy : Enemy {
 			directionVector = directionPolarCoordinate.PolarToCartesianTopDown();
 
 			Vector2 directionVector2D = new Vector2(directionVector.x, directionVector.z);
-			Debug.DrawRay(this.transform.position, directionVector.normalized * 10, Color.red);
 			this.Move(directionVector2D);
 		}
 		else if (this.attacking == false)

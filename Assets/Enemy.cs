@@ -1,10 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : DamagableCharacter {
 
-	private float moveSpeed = 3f;
+	protected Enchantment attackEnchantment; 
+	private Image swordIcon;
+	private Image shieldIcon;
+	protected GameObject playerTarget;
+	protected bool attacking = false;
+
+	protected float moveSpeed = 3f;
 
 	public bool defenseDebuffed = false;
 
@@ -31,6 +38,16 @@ public class Enemy : DamagableCharacter {
 		this.currentHP = this.maxHP;
 		this.invulnerabilityFrames = 10;
 		this.defaultMaterial = this.gameObject.GetComponent<Renderer>().material;
+
+		Image[] icons = this.GetComponentsInChildren<Image>();
+		this.swordIcon = icons[0];
+		this.shieldIcon = icons[1];
+		this.attackEnchantment = (Enchantment)Random.Range((int)Enchantment.Fire, (int)(Enchantment.None + 1)); 
+		this.defenseEnchantment = (Enchantment)Random.Range((int)Enchantment.Fire, (int)(Enchantment.None + 1));
+
+		EnchantmentManager.SetIconColors(this.swordIcon, this.attackEnchantment, this.shieldIcon, this.defenseEnchantment);
+
+		this.playerTarget = GameObject.Find("Character");
 	}
 
 	protected void Move(Vector2 moveVector)

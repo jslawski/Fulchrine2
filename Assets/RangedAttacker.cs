@@ -13,7 +13,7 @@ public class RangedAttacker : PlayerCharacter {
 	{
 		base.Awake();
 		this.currentFireCooldown = fireRate;
-		rangedProjectile = Resources.Load("RangedProjectile") as GameObject;
+		this.rangedProjectile = Resources.Load("RangedProjectile") as GameObject;
 	}
 
 	// Update is called once per frame
@@ -51,7 +51,7 @@ public class RangedAttacker : PlayerCharacter {
 				GameObject newRangedProjectileObject;
 				newRangedProjectileObject = GameObject.Instantiate(this.rangedProjectile, this.transform.position, new Quaternion()) as GameObject;
 				RangedProjectile newRangedProjectile = newRangedProjectileObject.GetComponent<RangedProjectile>();
-				newRangedProjectile.projectileDirection = this.gameObject.transform.forward;
+				newRangedProjectile.projectileDirection = this.GetFireDirection();
 				this.currentFireCooldown = 0;
 			}
 
@@ -59,5 +59,37 @@ public class RangedAttacker : PlayerCharacter {
 		}
 			
 		this.attackingCoroutine = null;
+	}
+
+	private Vector3 GetFireDirection()
+	{
+		//Enemy Layer only
+		int layerMask = 1 << 9;
+
+		RaycastHit[] potentialTargets = Physics.SphereCastAll(this.transform.position + (this.gameObject.transform.forward * 2f), 1f, this.gameObject.transform.forward, 15f, layerMask);
+
+		float closestDistance = float.MaxValue;
+		int closestIndex = int.MaxValue;
+
+		for (int i = 0; i < potentialTargets.Length; i++)
+		{
+			Debug.LogError("yey");
+			if (potentialTargets[i].distance < closestDistance)
+			{
+				closestDistance = potentialTargets[i].distance;
+				closestIndex = i;
+			}
+		}
+
+		if (closestIndex != int.MaxValue)
+		{
+			Vector3 direction = potentialTargets[closestIndex].collider.gameObject.transform.position - this.transform.position;
+			this.transform.forward = direction;
+			return direction.normalized;
+		}
+		else
+		{
+			return this.transform.forward.normalized;
+		}
 	}
 }

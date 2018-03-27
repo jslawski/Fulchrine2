@@ -11,6 +11,8 @@ public class RangedProjectile : Weapon {
 	{
 		this.projectileSpeed = 15f;
 		this.damageOutput = 70f;
+
+		Invoke("DestroyProjectile", 3f);
 	}
 
 	// Update is called once per frame
@@ -27,9 +29,14 @@ public class RangedProjectile : Weapon {
 	{
 		base.OnTriggerStay(other);
 
-		if (other.tag == "Enemy")
+		if (other.tag == "Enemy" || other.tag == "Player")
 		{
 			Destroy(this.gameObject);
 		}
+	}
+
+	private void DestroyProjectile()
+	{
+		Destroy(this.gameObject);
 	}
 }
